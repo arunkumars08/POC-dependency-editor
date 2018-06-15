@@ -124,14 +124,13 @@ export class DependencyEditorComponent implements OnInit, OnChanges, OnDestroy {
       this.postStackAnalyses(this.githubUrl, this.githubRef);
     }
     if (changes['blankResponse'] && changes['blankResponse']['currentValue']) {
-      debugger;
       this.blankMissionFlow();
     }
   }
 
   blankMissionFlow(): void {
     this.getDependencyInsights(this.blankResponse);
-    this.getCveData(this.blankResponse);
+    // this.getCveData(this.blankResponse);
     this.getLicenseData(this.blankResponse);
   }
 
@@ -311,10 +310,13 @@ export class DependencyEditorComponent implements OnInit, OnChanges, OnDestroy {
         subs = observable.subscribe((response: StackReportModel) => {
           rec = response && response.result && response.result[0] || null;
           if (rec) {
-            this.setCompanions(response.result[0]);
-            this.setAlternate(response.result[0]);
-            this.checkIfAlternatePresent(response.result[0].recommendation.alternate);
-            this.checkIfSecurityPresent(response.result[0].user_stack_info.analyzed_dependencies);
+            let resultInformationModel: ResultInformationModel = response.result[0];
+            this.setCompanions(resultInformationModel);
+            this.setAlternate(resultInformationModel);
+            this.checkIfAlternatePresent(resultInformationModel.recommendation.alternate);
+            this.checkIfSecurityPresent(resultInformationModel.user_stack_info.analyzed_dependencies);
+            DependencySnapshot.REQUEST_ID = response.request_id;
+            this.handleInitialLoads(resultInformationModel);
           }
         }, (error: any) => {
           // Handle server errors here
@@ -324,6 +326,16 @@ export class DependencyEditorComponent implements OnInit, OnChanges, OnDestroy {
           alive = false;
         }
       });
+  }
+
+  private handleInitialLoads(resultInformationModel: ResultInformationModel): void {
+    DependencySnapshot.ECOSYSTEM = resultInformationModel.user_stack_info.ecosystem;
+    DependencySnapshot.DEP_SNAPSHOT = resultInformationModel.user_stack_info.dependencies;
+    this.setDependencies(resultInformationModel);
+    this.setCompanions(resultInformationModel);
+    this.setAlternate(resultInformationModel);
+    this.setLicenseData(resultInformationModel);
+    this.emitSecurityChangeNeeded();
   }
 
   private emitLicenseChangeNeeded(): void {
