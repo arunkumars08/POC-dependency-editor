@@ -58,6 +58,7 @@ export class DependencyEditorComponent implements OnInit, OnChanges, OnDestroy {
   @Input() boosterInfo: BoosterInfo = null;
   @Input() githubRef = '';
   @Input() metadataInfo: any = null;
+  @Input() blankResponse: any= null;
 
   @Output() depSnapshot: EventEmitter<any> = new EventEmitter<any>();
   @Output() emitMetadata: EventEmitter<any> = new EventEmitter<any>();
@@ -122,6 +123,16 @@ export class DependencyEditorComponent implements OnInit, OnChanges, OnDestroy {
     if (changes['githubUrl'] && changes['githubUrl']['currentValue'] && changes['githubRef'] && changes['githubRef']['currentValue']) {
       this.postStackAnalyses(this.githubUrl, this.githubRef);
     }
+    if (changes['blankResponse'] && changes['blankResponse']['currentValue']) {
+      debugger;
+      this.blankMissionFlow();
+    }
+  }
+
+  blankMissionFlow(): void {
+    this.getDependencyInsights(this.blankResponse);
+    this.getCveData(this.blankResponse);
+    this.getLicenseData(this.blankResponse);
   }
 
   ngOnDestroy() {

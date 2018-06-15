@@ -47,9 +47,6 @@
           <div *ngIf="existDependencies?.length">
             <span *ngFor="let dependency of existDependencies" class="chip label label-default">{{dependency.package}}</span>
           </div>
-          <div *ngIf="!existDependencies?.length" class="pre-loader">
-            <!-- <div class="pre-loader-spinner spinner spinner-lg"></div> -->
-          </div>
         </section>
         <section class="fit dependency-strech" *ngIf="dependencies?.length || dependencyAdded?.length">
           <div>

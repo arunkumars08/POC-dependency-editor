@@ -1,6 +1,6 @@
 <div class="container-default dependencyEditorComponent">
   <div class="row row-main">
-    <div class="row-definition col-xs-12" *ngIf="boosterInfo">
+    <div class="row-definition col-xs-12" *ngIf="boosterInfo || blankResponse">
       <div class="col-xs-7 dependencies-container">
         <div class="row row-inside">
           <app-add-dependency [boosterInfo]="boosterInfo" [dependencies]="dependenciesAdded" [dependencyAdded]="dependencyAdded" [existDependencies]="dependencies"></app-add-dependency>
@@ -12,7 +12,7 @@
           [allLicenses]="allLicenses" [cveData]="cveData" (getMetadata)="getMetadata($event)"></app-current-project>
       </div>
     </div>
-    <div class="noDependency-label" *ngIf="!boosterInfo">
+    <div class="noDependency-label" *ngIf="!boosterInfo && !blankResponse">
       <h2>
         <b>No New Dependencies selected</b>
       </h2>
